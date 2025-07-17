@@ -1,0 +1,10 @@
+# .NET Core
+/WebsiteMakerApi/bin/
+/WebsiteMakerApi/obj/
+*.csproj.user
+*.sqlite
+
+# React
+/website-maker-frontend/node_modules/
+/website-maker-frontend/build/
+/website-maker-frontend/.env
