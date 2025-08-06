@@ -1,10 +1,11 @@
 # .NET Core
-/WebsiteMakerApi/bin/
-/WebsiteMakerApi/obj/
+/WebsitemakerApi/bin/
+/WebsitemakerApi/obj/
 *.csproj.user
 *.sqlite
 
-# React
-/website-maker-frontend/node_modules/
-/website-maker-frontend/build/
-/website-maker-frontend/.env
+# Angular (corrected from React)
+/website-maker/node_modules/
+/website-maker/dist/
+/website-maker/.angular/
+/website-maker/.env
