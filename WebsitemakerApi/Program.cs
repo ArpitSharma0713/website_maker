@@ -1,9 +1,25 @@
+using WebsitemakerApi.Models;
+using WebsitemakerApi.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Register UserService
+builder.Services.AddSingleton<IUserService, UserService>();
+
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -15,6 +31,33 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAngularApp");
+
+// Auth endpoints
+app.MapPost("/api/auth/register", async (RegisterRequest request, IUserService userService) =>
+{
+    var result = await userService.RegisterAsync(request);
+    return result.Success ? Results.Ok(result) : Results.BadRequest(result);
+})
+.WithName("Register")
+.WithOpenApi();
+
+app.MapPost("/api/auth/login", async (LoginRequest request, IUserService userService) =>
+{
+    var result = await userService.LoginAsync(request);
+    return result.Success ? Results.Ok(result) : Results.BadRequest(result);
+})
+.WithName("Login")
+.WithOpenApi();
+
+// User endpoints
+app.MapGet("/api/users/{username}", async (string username, IUserService userService) =>
+{
+    var user = await userService.GetUserByUsernameAsync(username);
+    return user != null ? Results.Ok(user) : Results.NotFound();
+})
+.WithName("GetUserByUsername")
+.WithOpenApi();
 
 var summaries = new[]
 {
