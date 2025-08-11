@@ -1,0 +1,38 @@
+<div class="divided">
+    <div class="divider_1">
+        <div class="images">
+            <marquee behavior="scroll" direction="left">
+                <img [src]="imageUrl" alt="A person sitting on a bench" class="image">
+            </marquee>
+        </div>
+    </div>
+    <div class="divider_2">
+        <h3 class="highlight">
+            REGISTER / SIGN UP
+        </h3>
+        <form (ngSubmit)="onRegister()">
+            <label class="words" for="fullname">FULL NAME</label>
+            <input type="text" id="fullname" name="fullname" placeholder="Enter Full Name" class="text_box" autocomplete="name">
+            
+            <label class="words" for="email">EMAIL</label>
+            <input type="email" id="email" name="email" placeholder="Enter Email" class="text_box" autocomplete="email">
+            
+            <label class="words" for="dateOfBirth">DATE OF BIRTH</label>
+            <input type="date" id="dateOfBirth" name="dateOfBirth" class="text_box" autocomplete="bday">
+            
+            <label class="words" for="username">USERNAME</label>
+            <input type="text" id="username" name="username" placeholder="Enter Username" class="text_box" autocomplete="username">
+            
+            <label class="words" for="password">PASSWORD</label>
+            <input type="password" id="password" name="password" placeholder="Enter Password" class="text_box" autocomplete="new-password">
+            
+            <label class="words" for="confirmPassword">CONFIRM PASSWORD</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" class="text_box" autocomplete="new-password">
+            
+            <div class="buttons">
+                <button type="button" (click)="goToLogin()" class="btn secondary">Back to Login</button>
+                <button type="submit" class="btn">Register</button>
+            </div>
+        </form>
+    </div>
+</div>

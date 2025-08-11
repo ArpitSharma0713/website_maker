@@ -101,6 +101,30 @@ form {
     transform: translateY(0);
 }
 
+.link {
+    background: none;
+    border: none;
+    color: #5a8a7a;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0;
+    margin: 0.5rem 0;
+    text-align: left;
+    transition: color 0.3s ease;
+}
+
+.link:hover {
+    color: #004030;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     .divided {
@@ -123,5 +147,28 @@ form {
     
     form {
         max-width: 300px;
+    }
+}
+.images {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.images img {
+    width: 100%;
+    height: auto;
+    animation: scroll 10s linear infinite;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
     }
 }

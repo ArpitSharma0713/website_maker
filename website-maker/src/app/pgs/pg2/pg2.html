@@ -1,0 +1,16 @@
+<div class="divided">
+    <div class="divider_1">
+        <img src="" alt="">
+    </div>
+    <div class="divider_2">
+        <h3 class="highlight">
+            FORGOT PASSWORD
+        </h3>
+        <form (ngSubmit)="onResetPassword()">
+            <label class="words" for="email">EMAIL</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" class="text_box" autocomplete="email">
+            <button type="submit" class="btn">Send Reset Link</button>
+            <button type="button" (click)="goBackToLogin()" class="link">Back to Login</button>
+        </form>
+    </div>
+</div>

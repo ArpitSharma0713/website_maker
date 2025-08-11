@@ -1,0 +1,144 @@
+.divided {
+    display: flex;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.divider_1 {
+    flex: 1;
+    background-color: #004030;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+}
+
+.divider_1 img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+.divider_2 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 2rem;
+    background-color: #F9F9F6;
+}
+
+.highlight {
+    color: #004030;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+form {
+    width: 100%;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.words {
+    color: #004030;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.text_box {
+    padding: 12px 16px;
+    border: 2px solid #5a8a7a;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background-color: #F9F9F6;
+    color: #004030;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    outline: none;
+}
+
+.text_box:focus {
+    border-color: #004030;
+    box-shadow: 0 0 0 2px rgba(90, 138, 122, 0.2);
+}
+
+.text_box::placeholder {
+    color: #5a8a7a;
+    opacity: 0.8;
+}
+
+.btn {
+    background-color: #5a8a7a;
+    color: #F9F9F6;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn:hover {
+    background-color: #004030;
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.link {
+    background: none;
+    border: none;
+    color: #5a8a7a;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0;
+    margin: 0.5rem 0;
+    text-align: left;
+    transition: color 0.3s ease;
+}
+
+.link:hover {
+    color: #004030;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .divided {
+        flex-direction: column;
+    }
+    
+    .divider_1 {
+        min-height: 35vh;
+    }
+    
+    .divider_2 {
+        min-height: 65vh;
+        padding: 2rem 1.5rem;
+    }
+    
+    .highlight {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    form {
+        max-width: 300px;
+    }
+}
