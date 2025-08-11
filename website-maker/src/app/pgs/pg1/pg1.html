@@ -11,14 +11,25 @@
             SIGN IN / LOGIN
         </h3>
         <form (ngSubmit)="onLogin()">
+            <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+            
             <label class="words" for="username">USERNAME</label>
-            <input type="text" id="username" name="username" placeholder="Enter Username" class="text_box" autocomplete="username">
+            <input type="text" id="username" name="username" placeholder="Enter Username" 
+                   class="text_box" autocomplete="username" 
+                   [(ngModel)]="loginData.username" required>
+            
             <label class="words" for="password">PASSWORD</label>
-            <input type="password" id="password" name="password" placeholder="Enter Password" class="text_box" autocomplete="current-password">
+            <input type="password" id="password" name="password" placeholder="Enter Password" 
+                   class="text_box" autocomplete="current-password" 
+                   [(ngModel)]="loginData.password" required>
+            
             <button type="button" (click)="goToForgotPassword()" class="link">Forgot Password?</button>
+            
             <div class="buttons">
-            <button type="button" (click)="goToRegister()" class="btn">Register</button>
-            <button type="submit" class="btn">Login</button>
+                <button type="button" (click)="goToRegister()" class="btn">Register</button>
+                <button type="submit" class="btn" [disabled]="isLoading">
+                    {{ isLoading ? 'Logging in...' : 'Login' }}
+                </button>
             </div>
         </form>
     </div>
