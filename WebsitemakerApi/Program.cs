@@ -1,5 +1,6 @@
 using WebsitemakerApi.Models;
 using WebsitemakerApi.Services;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +8,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configure MongoDB
+builder.Services.Configure<MongoDbSettings>(
+    builder.Configuration.GetSection("MongoDbSettings"));
+
+builder.Services.AddSingleton<IMongoClient>(s =>
+    new MongoClient("mongodb://localhost:27017"));
+
+builder.Services.AddScoped(s =>
+    s.GetRequiredService<IMongoClient>().GetDatabase("WebsiteMakerDb"));
+
 // Register UserService
-builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Add CORS
 builder.Services.AddCors(options =>

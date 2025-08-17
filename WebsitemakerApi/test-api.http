@@ -1,0 +1,36 @@
+### Test Registration
+POST http://localhost:5223/api/auth/register
+Content-Type: application/json
+
+{
+    "fullName": "Test User",
+    "email": "test@example.com", 
+    "dateOfBirth": "1990-01-01",
+    "username": "testuser",
+    "password": "password123",
+    "confirmPassword": "password123"
+}
+
+###
+
+### Test Login
+POST http://localhost:5223/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "testuser",
+    "password": "password123"
+}
+
+###
+
+### Test Invalid Login
+POST http://localhost:5223/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "testuser",
+    "password": "wrongpassword"
+}
+
+###

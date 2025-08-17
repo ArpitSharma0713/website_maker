@@ -1,4 +1,5 @@
 using WebsitemakerApi.Models;
+using MongoDB.Driver;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -14,13 +15,41 @@ namespace WebsitemakerApi.Services
 
     public class UserService : IUserService
     {
-        private static readonly List<User> _users = new();
-        private static int _nextId = 1;
+        private readonly IMongoCollection<User> _users;
+
+        public UserService(IMongoDatabase database)
+        {
+            _users = database.GetCollection<User>("Users");
+            
+            // Create unique indexes
+            CreateIndexes();
+        }
+
+        private void CreateIndexes()
+        {
+            try
+            {
+                // Create unique index on username
+                var usernameIndexKeys = Builders<User>.IndexKeys.Ascending(u => u.Username);
+                var usernameIndexOptions = new CreateIndexOptions { Unique = true };
+                var usernameIndexModel = new CreateIndexModel<User>(usernameIndexKeys, usernameIndexOptions);
+
+                // Create unique index on email
+                var emailIndexKeys = Builders<User>.IndexKeys.Ascending(u => u.Email);
+                var emailIndexOptions = new CreateIndexOptions { Unique = true };
+                var emailIndexModel = new CreateIndexModel<User>(emailIndexKeys, emailIndexOptions);
+
+                _users.Indexes.CreateMany(new[] { usernameIndexModel, emailIndexModel });
+            }
+            catch (Exception ex)
+            {
+                // Indexes might already exist, which is fine
+                Console.WriteLine($"Index creation warning: {ex.Message}");
+            }
+        }
 
         public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
         {
-            await Task.Delay(1); // Simulate async operation
-
             // Validation
             if (string.IsNullOrWhiteSpace(request.FullName))
                 return new AuthResponse { Success = false, Message = "Full name is required" };
@@ -41,16 +70,17 @@ namespace WebsitemakerApi.Services
                 return new AuthResponse { Success = false, Message = "Password must be at least 6 characters long" };
 
             // Check if user already exists
-            if (_users.Any(u => u.Username.ToLower() == request.Username.ToLower()))
+            var existingUserByUsername = await _users.Find(u => u.Username.ToLower() == request.Username.ToLower()).FirstOrDefaultAsync();
+            if (existingUserByUsername != null)
                 return new AuthResponse { Success = false, Message = "Username already exists" };
 
-            if (_users.Any(u => u.Email.ToLower() == request.Email.ToLower()))
+            var existingUserByEmail = await _users.Find(u => u.Email.ToLower() == request.Email.ToLower()).FirstOrDefaultAsync();
+            if (existingUserByEmail != null)
                 return new AuthResponse { Success = false, Message = "Email already exists" };
 
             // Create new user
             var user = new User
             {
-                Id = _nextId++,
                 FullName = request.FullName,
                 Email = request.Email,
                 DateOfBirth = request.DateOfBirth,
@@ -59,32 +89,37 @@ namespace WebsitemakerApi.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            _users.Add(user);
-
-            return new AuthResponse
+            try
             {
-                Success = true,
-                Message = "User registered successfully",
-                User = new User
+                await _users.InsertOneAsync(user);
+
+                return new AuthResponse
                 {
-                    Id = user.Id,
-                    FullName = user.FullName,
-                    Email = user.Email,
-                    DateOfBirth = user.DateOfBirth,
-                    Username = user.Username,
-                    CreatedAt = user.CreatedAt
-                }
-            };
+                    Success = true,
+                    Message = "User registered successfully",
+                    User = new UserResponse
+                    {
+                        Id = user.Id!,
+                        FullName = user.FullName,
+                        Email = user.Email,
+                        DateOfBirth = user.DateOfBirth,
+                        Username = user.Username,
+                        CreatedAt = user.CreatedAt
+                    }
+                };
+            }
+            catch (MongoWriteException ex) when (ex.WriteError.Category == ServerErrorCategory.DuplicateKey)
+            {
+                return new AuthResponse { Success = false, Message = "Username or email already exists" };
+            }
         }
 
         public async Task<AuthResponse> LoginAsync(LoginRequest request)
         {
-            await Task.Delay(1); // Simulate async operation
-
             if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
                 return new AuthResponse { Success = false, Message = "Username and password are required" };
 
-            var user = _users.FirstOrDefault(u => u.Username.ToLower() == request.Username.ToLower());
+            var user = await _users.Find(u => u.Username.ToLower() == request.Username.ToLower()).FirstOrDefaultAsync();
             
             if (user == null || !VerifyPassword(request.Password, user.PasswordHash))
                 return new AuthResponse { Success = false, Message = "Invalid username or password" };
@@ -93,9 +128,9 @@ namespace WebsitemakerApi.Services
             {
                 Success = true,
                 Message = "Login successful",
-                User = new User
+                User = new UserResponse
                 {
-                    Id = user.Id,
+                    Id = user.Id!,
                     FullName = user.FullName,
                     Email = user.Email,
                     DateOfBirth = user.DateOfBirth,
@@ -108,14 +143,12 @@ namespace WebsitemakerApi.Services
 
         public async Task<User?> GetUserByUsernameAsync(string username)
         {
-            await Task.Delay(1); // Simulate async operation
-            return _users.FirstOrDefault(u => u.Username.ToLower() == username.ToLower());
+            return await _users.Find(u => u.Username.ToLower() == username.ToLower()).FirstOrDefaultAsync();
         }
 
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            await Task.Delay(1); // Simulate async operation
-            return _users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+            return await _users.Find(u => u.Email.ToLower() == email.ToLower()).FirstOrDefaultAsync();
         }
 
         private static string HashPassword(string password)

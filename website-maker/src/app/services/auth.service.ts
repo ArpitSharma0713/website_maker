@@ -7,7 +7,7 @@ import { RegisterRequest, LoginRequest, AuthResponse } from './auth.models';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:7204/api/auth'; // Updated to match launchSettings
+  private apiUrl = 'http://localhost:5223/api/auth'; // Updated to match the running server
 
   constructor(private http: HttpClient) {}
 
