@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Register } from './register';
+import { Pg4Header } from './pg4-header';
 
-describe('Register', () => {
-  let component: Register;
-  let fixture: ComponentFixture<Register>;
+describe('Pg4Header', () => {
+  let component: Pg4Header;
+  let fixture: ComponentFixture<Pg4Header>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Register]
+      imports: [Pg4Header]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Register);
+    fixture = TestBed.createComponent(Pg4Header);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
