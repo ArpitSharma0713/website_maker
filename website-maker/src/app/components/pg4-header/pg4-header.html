@@ -1,1 +1,20 @@
-<p>pg4-header works!</p>
+<form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+    <img src="assets/logo.png" alt="Logo" (click)="onPanelClick()">
+    <aside *ngIf="isPanelOpen">
+        <ul>
+            <li>
+                <button (click)="onLinkClick('Link 1')">Link 1</button>
+            </li>
+            <li>
+                <button (click)="onLinkClick('Link 2')">Link 2</button>
+            </li>
+            <li>
+                <button (click)="onLinkClick('Link 3')">Link 3</button>
+            </li>
+        </ul>
+
+    </aside>
+
+    <input formControlName="searchTerm" placeholder="Search...">
+    <button type="submit">Search</button>
+</form>
