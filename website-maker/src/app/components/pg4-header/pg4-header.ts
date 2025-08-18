@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule,FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,10 +10,22 @@ import { Router } from '@angular/router';
   styleUrl: './pg4-header.css'
 })
 export class Pg4Header {
+  isPanelOpen = false;
+
   constructor(private router: Router) {}
+  onPanelClick() {
+    this.isPanelOpen = !this.isPanelOpen;
+  }
+  searchForm = new FormGroup({
+    search: new FormControl('')
+  });
+  onSearch() {
+    const value = this.searchForm.value.search;
+    console.log('Search submitted:', value);
+  }
   onLinkClick(link: string) {
     if(link=="Link 1") {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/login']); 
     } else if(link=="Link 2") {
       this.router.navigate(['/register']);
     } else if(link=="Link 3") {
